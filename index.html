@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXA - Penasihat Hukum Digital Indonesia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/marked/marked.min.js'></script>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --secondary: #c53030;
+            --accent: #d69e2e;
+            --surface: #f7fafc;
+            --surface-elevated: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #1a365d 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--surface);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            padding-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .welcome-screen h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .welcome-screen p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            max-width: 500px;
+            margin-bottom: 32px;
+        }
+
+        .message {
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message.lexa {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        .message.user .markdown-content h1,
+        .message.user .markdown-content h2,
+        .message.user .markdown-content h3,
+        .message.user .markdown-content strong {
+            color: white;
+        }
+        .message.user .markdown-content em {
+            color: rgba(255,255,255,0.85);
+        }
+        .message.user .markdown-content code {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+        .message.user .markdown-content ul,
+        .message.user .markdown-content ol {
+            color: white;
+        }
+
+        .message.lexa .message-bubble {
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .message.user .message-meta {
+            justify-content: flex-end;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 16px 20px;
+            background: var(--surface-elevated);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 900px;
+            padding: 6px 16px;
+            background: var(--surface-elevated);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+
+        .input-container.hidden {
+            transform: translateX(-50%) translateY(calc(100% + 10px));
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chat-container.input-hidden {
+            padding-bottom: 16px;
+        }
+
+        .input-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px 60px 12px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-family: inherit;
+            resize: none;
+            min-height: 48px;
+            max-height: 200px;
+            transition: var(--transition);
+            background: var(--surface);
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+        }
+
+        .input-box::placeholder {
+            color: var(--text-muted);
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .source-info {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 16px;
+            }
+
+            .logo-text h1 {
+                font-size: 20px;
+            }
+
+            .logo-text span {
+                display: none;
+            }
+
+            .chat-container {
+                padding: 16px;
+                padding-bottom: 80px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 24px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .input-container {
+                padding: 8px 12px;
+            }
+
+            .input-trigger {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            .message-bubble {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 12px;
+            }
+            
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            
+            .logo-text h1 {
+                font-size: 16px;
+            }
+            
+            .chat-container {
+                padding: 12px;
+                padding-bottom: 80px;
+                gap: 12px;
+            }
+            
+            .welcome-screen h2 {
+                font-size: 20px;
+            }
+            
+            .welcome-screen p {
+                font-size: 14px;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+            
+            .message-bubble {
+                font-size: 13px;
+                padding: 12px 14px;
+            }
+            
+            .input-box {
+                padding: 10px 50px 10px 16px;
+                font-size: 14px;
+            }
+            
+            .send-btn {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .send-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            
+            .modal-container {
+                max-width: 95%;
+                margin: 10px;
+            }
+            
+            .markdown-content h1 {
+                font-size: 16px;
+            }
+            
+            .markdown-content h2 {
+                font-size: 15px;
+            }
+            
+            .markdown-content h3 {
+                font-size: 14px;
+            }
+            
+            .markdown-content p {
+                font-size: 13px;
+            }
+            
+            .markdown-content ul,
+            .markdown-content ol {
+                padding-left: 18px;
+            }
+            
+            .markdown-content li {
+                font-size: 13px;
+            }
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            color: var(--primary);
+            margin-top: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .markdown-content h1 {
+            font-size: 18px;
+        }
+
+        .markdown-content h2 {
+            font-size: 16px;
+        }
+
+        .markdown-content h3 {
+            font-size: 15px;
+        }
+
+        .markdown-content p {
+            margin-bottom: 12px;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .markdown-content li {
+            margin-bottom: 6px;
+        }
+
+        .markdown-content strong {
+            color: var(--primary);
+        }
+
+        .markdown-content em {
+            color: var(--text-secondary);
+        }
+
+        .markdown-content code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* Responsive table support */
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: var(--surface);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .markdown-content tr:nth-child(even) td {
+            background: var(--surface);
+        }
+
+        /* Table wrapper for horizontal scroll on mobile */
+        .markdown-content {
+            overflow-x: auto;
+        }
+
+        .markdown-content table {
+            min-width: 100%;
+            display: block;
+            max-width: fit-content;
+        }
+
+        @media (max-width: 640px) {
+            .markdown-content table {
+                font-size: 12px;
+            }
+            .markdown-content th,
+            .markdown-content td {
+                padding: 6px 8px;
+            }
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid #fc8181;
+            text-align: center;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 54, 93, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            animation: fadeInModal 0.3s ease;
+        }
+
+        .modal-container {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: var(--surface);
+            color: var(--secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-input {
+            width: 100%;
+            min-height: 200px;
+            max-height: 400px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+            transition: var(--transition);
+            background: var(--surface);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1);
+        }
+
+        .modal-body .note-editor {
+            width: 100%;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+
+        .modal-body .note-editor .note-toolbar {
+            background: var(--surface);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+
+        .modal-body .note-editor .note-editable {
+            font-family: inherit;
+            font-size: 16px;
+            padding: 16px;
+            color: var(--text-primary);
+            min-height: 200px;
+        }
+
+        .modal-body .note-editor .note-btn {
+            font-size: 13px;
+        }
+
+        .modal-body .note-dropdown-menu,
+        .modal-body .note-modal .modal-content {
+            z-index: 2500;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: var(--surface);
+        }
+
+        .input-trigger {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--text-muted);
+            background: var(--surface);
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-trigger:hover {
+            border-color: var(--primary);
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">L</div>
+                <div class="logo-text">
+                    <h1>LEXA</h1>
+                </div>
+            </div>
+            <button id='clear-chat' style="background:transparent;border:1px solid rgba(26,54,93,0.4);color:var(--primary);font-size:0.75rem;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                Chat Baru
+            </button>
+        </header>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">⚖️</div>
+                <h2>LEXA (Law Experience Assistant)</h2>
+                <p>Penasihat hukum digital yang siap membantu Anda memahami dan menghadapi masalah hukum dengan strategi
+                    yang tepat.</p>
+                </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-trigger" onclick="openModal()">
+                    <span>Tulis pertanyaan hukum Anda di sini...</span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="source-info">
+                Aplikasi ini hanya alat bantu berbasis AI dan bukan ADVOKAT.
+            </div>
+        </div>
+
+        <!-- Modal Input -->
+        <div id="inputModal" class="modal-overlay" onclick="handleOverlayClick(event)">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Pertanyaan Hukum</h3>
+                    <button class="close-modal" onclick="closeModal()">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="modalUserInput" class="modal-input" placeholder="Tulis rincian masalah atau pertanyaan hukum Anda secara lengkap di sini..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+                    <button class="btn btn-primary" id="modalSendBtn" onclick="sendMessageFromModal()">
+                        Kirim Pertanyaan
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/lang/summernote-id-ID.min.js"></script>
+    <script>
+        let sessionId = null;
+        let isLoading = false;
+
+        const chatContainer = document.getElementById('chatContainer');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const inputModal = document.getElementById('inputModal');
+        const modalUserInput = document.getElementById('modalUserInput');
+        const modalSendBtn = document.getElementById('modalSendBtn');
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+
+        function sanitizeHtml(raw) {
+            const template = document.createElement('template');
+            template.innerHTML = raw == null ? '' : String(raw);
+            const ALLOWED = new Set(['B','I','EM','STRONG','A','P','UL','OL','LI','H1','H2','H3','H4','H5','H6','TABLE','THEAD','TBODY','TR','TH','TD','CODE','PRE','BLOCKQUOTE','BR','HR','DIV','SPAN','SUP','SUB','U','DEL','S']);
+            function clean(node) {
+                Array.from(node.childNodes).forEach(function(child) {
+                    if (child.nodeType === 1) {
+                        const tag = child.tagName.toUpperCase();
+                        if (!ALLOWED.has(tag)) {
+                            const replacement = document.createTextNode(child.textContent || '');
+                            node.replaceChild(replacement, child);
+                            return;
+                        }
+                        if (tag !== 'A') child.removeAttribute('href');
+                        Array.from(child.attributes).forEach(function(attr) {
+                            const name = attr.name.toLowerCase();
+                            if (name.startsWith('on')) child.removeAttribute(attr.name);
+                        });
+                        Array.from(child.attributes).forEach(function(attr) {
+                            if (attr.name.toLowerCase() !== 'href') child.removeAttribute(attr.name);
+                        });
+                        if (tag === 'A') {
+                            const href = (child.getAttribute('href') || '').trim();
+                            const ok = /^(https?:|mailto:|tel:|#)/i.test(href) && !/javascript:/i.test(href);
+                            if (!ok) child.removeAttribute('href');
+                            child.removeAttribute('target');
+                            child.removeAttribute('rel');
+                        }
+                        clean(child);
+                    } else if (child.nodeType === 8) {
+                        node.removeChild(child);
+                    }
+                });
+            }
+            clean(template.content);
+            return template.innerHTML;
+        }
+
+        let summernoteReady = false;
+
+        function initSummernote() {
+            if (summernoteReady) return;
+            $(modalUserInput).summernote({
+                placeholder: 'Tulis rincian masalah atau pertanyaan hukum Anda secara lengkap di sini...',
+                lang: 'id-ID',
+                tabsize: 2,
+                height: 200,
+                focus: false,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link']],
+                    ['view', ['codeview']]
+                ]
+            });
+            summernoteReady = true;
+
+            $(modalUserInput).on('summernote.keydown', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    sendMessageFromModal();
+                }
+            });
+        }
+
+        function getEditorText() {
+            if (summernoteReady) {
+                let html = $(modalUserInput).summernote('code')
+                    .replace(/<br[^>]*>/gi, '\n')
+                    .replace(/<\/?(p|div|li|h[1-6])[^>]*>/gi, '\n');
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                return tmp.textContent.replace(/\n{3,}/g, '\n\n').trim();
+            }
+            return modalUserInput.value.trim();
+        }
+
+        function openModal() {
+            inputModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            initSummernote();
+            $(modalUserInput).summernote('focus');
+        }
+
+        function closeModal() {
+            inputModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target === inputModal) {
+                closeModal();
+            }
+        }
+
+        modalUserInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                sendMessageFromModal();
+            }
+        });
+
+        function sendMessageFromModal() {
+            const question = getEditorText();
+            if (question) {
+                sendMessage(question);
+                closeModal();
+                if (summernoteReady) {
+                    $(modalUserInput).summernote('code', '');
+                } else {
+                    modalUserInput.value = '';
+                }
+            }
+        }
+
+        function getSessionId() {
+            let sid = localStorage.getItem('lexa_session_id');
+            if (!sid) {
+                sid = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                localStorage.setItem('lexa_session_id', sid);
+            }
+            return sid;
+        }
+
+        function clearChat() {
+            sessionId = null;
+            chatContainer.innerHTML = '';
+            chatContainer.appendChild(welcomeScreen);
+            localStorage.removeItem('lexa_session_id');
+            sessionId = getSessionId();
+            welcomeScreen.style.display = 'flex';
+        }
+
+        async function loadChatHistory() {
+            if (!sessionId) return;
+            try {
+                const res = await fetch('/api/lexa/history?session_id=' + encodeURIComponent(sessionId));
+                const data = await res.json();
+                if (data.messages) {
+                    data.messages.forEach(function(msg) {
+                        addMessage(msg.message, msg.role === 'lexa' ? 'lexa' : 'user');
+                    });
+                }
+            } catch(e) {
+                console.log('History unavailable', e);
+            }
+        }
+
+        function addMessage(text, role) {
+            if (welcomeScreen.style.display !== 'none') {
+                welcomeScreen.style.display = 'none';
+            }
+            const div = document.createElement('div');
+            div.className = 'message ' + role;
+            if (role === 'lexa') {
+                div.innerHTML = '<div class="message-bubble markdown-content">' + sanitizeHtml(marked.parse(text)) + '</div>';
+            } else {
+                div.innerHTML = '<div class="message-bubble">' + escapeHtml(text) + '</div>';
+            }
+            chatContainer.appendChild(div);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message lexa';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function sendMessage(manualQuestion = null) {
+            const question = manualQuestion || '';
+            if (!question || isLoading) return;
+
+            isLoading = true;
+            if (modalSendBtn) modalSendBtn.disabled = true;
+
+            if (welcomeScreen.style.display !== 'none') {
+                welcomeScreen.style.display = 'none';
+            }
+
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `
+                <div class="message-bubble">${escapeHtml(question)}</div>
+            `;
+            chatContainer.appendChild(userMessage);
+
+            showTypingIndicator();
+
+            try {
+                const payload = {
+                    pertanyaan: question
+                };
+
+                if (sessionId) {
+                    payload.session_id = sessionId;
+                }
+
+                const response = await fetch('/api/lexa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.session_id && !sessionId) {
+                    sessionId = data.session_id;
+                    localStorage.setItem('lexa_session_id', sessionId);
+                }
+
+                removeTypingIndicator();
+
+                if (data.status === 'success') {
+                    const lexMessage = document.createElement('div');
+                    lexMessage.className = 'message lexa';
+                    lexMessage.innerHTML = `
+                        <div class="message-bubble markdown-content">${sanitizeHtml(marked.parse(data.jawaban))}</div>
+                        <div class="message-meta">
+                            <span>LEXA</span>
+                        </div>
+                    `;
+                    chatContainer.appendChild(lexMessage);
+                } else {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'message lexa';
+                    errorDiv.innerHTML = `
+                        <div class="message-bubble error-message">${escapeHtml(data.message) || 'Terjadi kesalahan. Silakan coba lagi.'}</div>
+                    `;
+                    chatContainer.appendChild(errorDiv);
+                }
+
+                scrollToBottom();
+
+            } catch (error) {
+                removeTypingIndicator();
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'message lexa';
+                errorDiv.innerHTML = `
+                    <div class="message-bubble error-message">Maaf, terjadi kesalahan koneksi. Silakan coba lagi.</div>
+                `;
+                chatContainer.appendChild(errorDiv);
+                scrollToBottom();
+            } finally {
+                isLoading = false;
+                if (modalSendBtn) modalSendBtn.disabled = false;
+            }
+        }
+
+        sessionId = getSessionId();
+        loadChatHistory();
+
+        document.getElementById('clear-chat').addEventListener('click', function() {
+            if (confirm('Mulai chat baru?')) {
+                clearChat();
+            }
+        });
+
+        // Scroll-to-hide input container
+        const inputContainer = document.querySelector('.input-container');
+        let lastScrollTop = 0;
+        let ticking = false;
+
+        function updateInputVisibility(scrollTop) {
+            const diff = scrollTop - lastScrollTop;
+            if (diff < -5) {
+                inputContainer.classList.add('hidden');
+                chatContainer.classList.add('input-hidden');
+            } else if (diff > 5) {
+                inputContainer.classList.remove('hidden');
+                chatContainer.classList.remove('input-hidden');
+            }
+            lastScrollTop = scrollTop;
+            ticking = false;
+        }
+
+        chatContainer.addEventListener('scroll', function() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(function() {
+                    updateInputVisibility(chatContainer.scrollTop);
+                });
+            }
+        });
+
+        // Show input when clicking/tapping anywhere in chat area
+        chatContainer.addEventListener('click', function() {
+            inputContainer.classList.remove('hidden');
+            chatContainer.classList.remove('input-hidden');
+        });
+    </script>
+</body>
+
+</html>
