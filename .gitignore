@@ -4,6 +4,7 @@ Thumbs.db
 
 # Backup files
 *.bak
+*.bak.*
 *.backup
 
 # IDE
